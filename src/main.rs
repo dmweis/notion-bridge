@@ -443,3 +443,41 @@ impl PageIdCache {
         }
     }
 }
+
+#[allow(dead_code)]
+fn internal_embed(text: Option<&str>, link: &str) -> String {
+    if let Some(text) = text {
+        format!("![[{}|{}]]", link, text)
+    } else {
+        format!("![[{}]]", link)
+    }
+}
+
+#[allow(dead_code)]
+fn external_embed(text: Option<&str>, link: &str) -> String {
+    // should I care about url encoding here?
+    if let Some(text) = text {
+        format!("![{}]({})", text, link)
+    } else {
+        format!("![]({})", link)
+    }
+}
+
+#[allow(dead_code)]
+fn internal_link(text: Option<&str>, link: &str) -> String {
+    if let Some(text) = text {
+        format!("[[{}|{}]]", link, text)
+    } else {
+        format!("[[{}]]", link)
+    }
+}
+
+#[allow(dead_code)]
+fn external_link(text: Option<&str>, link: &str) -> String {
+    // should I care about url encoding here?
+    if let Some(text) = text {
+        format!("[{}]({})", text, link)
+    } else {
+        format!("<{}>", link)
+    }
+}
