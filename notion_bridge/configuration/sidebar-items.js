@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"constant":[["CONFIG_FILE_EXTENSION",""],["CONFIG_FILE_NAME",""],["PROJECT_APPLICATION_NAME",""],["PROJECT_ORGANIZATION",""],["PROJECT_QUALIFIER",""]],"fn":[["get_config_file_path",""],["get_project_dirs",""]],"struct":[["AppConfig",""]]};
