@@ -918,7 +918,7 @@ dependencies = [
 [[package]]
 name = "notion"
 version = "0.5.1"
-source = "git+https://github.com/dmweis/notion.git?branch=dmw/patch-2#6631fc491b7b5e09d159bc12af98207ee4fdd901"
+source = "git+https://github.com/dmweis/notion.git?branch=dmw/patch-2#d199a542ebff21a5aaa162f48aca62b4b50ec7af"
 dependencies = [
  "chrono",
  "reqwest",

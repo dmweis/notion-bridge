@@ -69,12 +69,11 @@ async fn main() -> anyhow::Result<()> {
                     );
                 }
                 notion::models::Object::Page { page } => {
-                    println!(
-                        "Page: {} {}",
-                        page.title().unwrap(),
-                        notion_page_id_to_url(&page.id)
-                    );
-                    process_page(&notion_api, page.id).await?;
+                    let title = page.title().unwrap();
+                    println!("Page: {} {}", title, notion_page_id_to_url(&page.id));
+                    if let Err(error) = process_page(&notion_api, page.id).await {
+                        eprintln!("Failed for {title} with error {error:?}");
+                    }
                 }
                 notion::models::Object::List { list: _ } => {
                     println!("List");
@@ -87,11 +86,9 @@ async fn main() -> anyhow::Result<()> {
                 }
             }
         }
-        println!("Has more: {}", search_result.has_more);
         if let Some(cursor) = search_result.next_cursor {
             let search_request = SearchRequest::default().start_from(Some(cursor));
             search_result = notion_api.search(search_request).await?;
-            println!("Getting next page");
         } else {
             break;
         }
@@ -124,6 +121,7 @@ async fn process_page(notion_client: &NotionApi, page_id: PageId) -> anyhow::Res
         }
     }
 
+    let page_title = page_title.replace('/', "-");
     let mut file = tokio::fs::File::create(format!("output/{page_title}.md")).await?;
     file.write_all(page_buffer.as_bytes()).await?;
 
@@ -437,7 +435,7 @@ impl PageIdCache {
             Ok(title.clone())
         } else {
             let page = client.get_page(id.clone()).await?;
-            let title = page.title().unwrap_or_default();
+            let title = page.title().unwrap_or("UNKNOWN_TITLE".to_owned());
             self.page_to_title.insert(id.clone(), title.clone());
             Ok(title)
         }
