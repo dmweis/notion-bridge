@@ -101,10 +101,17 @@ async fn process_page(notion_client: &NotionApi, page_id: PageId) -> anyhow::Res
     let page = notion_client.get_page(page_id.clone()).await?;
     let page_title = page.title().expect("failed to get page title");
 
-    let block_id: BlockId = page_id.into();
+    let block_id: BlockId = page_id.clone().into();
     let mut children = notion_client.get_block_children(block_id.clone()).await?;
 
     let mut page_buffer = String::new();
+
+    let link_to_page = external_link(Some(&page_title), &notion_page_id_to_url(&page_id));
+
+    // add heading link as first line
+    page_buffer.push_str("# ");
+    page_buffer.push_str(&link_to_page);
+    page_buffer.push_str("\n\n");
 
     let _page_id_cache = PageIdCache::new();
 
